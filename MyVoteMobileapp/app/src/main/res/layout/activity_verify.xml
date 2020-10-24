@@ -10,23 +10,89 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:textSize="32sp"
             android:text="Verifying.."
-            android:textStyle="bold"/>
-        <View
+            android:textSize="32sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/face_detection_button"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginLeft="16dp"
-            android:background="#000000"/>
+            android:layout_height="50dp"
+            android:layout_margin="16dp"
+            android:background="#f0f0f0"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:layout_margin="2dp"
+                android:gravity="center"
+                android:src="@drawable/ic_baseline_add_circle_24" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Voter Photo"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/voterID_button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="16dp"
+            android:background="#f0f0f0"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:layout_margin="2dp"
+                android:gravity="center"
+                android:src="@drawable/ic_baseline_add_circle_24" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Voter ID Photo"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/location_button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="16dp"
+            android:background="#f0f0f0"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:layout_margin="2dp"
+                android:gravity="center"
+                android:src="@drawable/ic_baseline_add_circle_24" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Preferred Location"
+                android:textSize="24sp" />
+        </LinearLayout>
+
         <Button
+            android:id="@+id/request_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Request"
-            android:layout_margin="16dp"/>
+            android:layout_margin="32dp"
+            android:text="Request" />
     </LinearLayout>
 </ScrollView>
