@@ -1,15 +1,10 @@
 package com.sreeharan.myvote_mobileapp;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -17,30 +12,45 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import static com.sreeharan.myvote_mobileapp.ImageDetection.*;
+import static com.sreeharan.myvote_mobileapp.DetailsClass.*;
 
 public class VerifyActivity extends AppCompatActivity {
 
     private final int CAMERA_PERMISSION_CODE = 23;
-    Dialog myDialog;
-    private final String TAG = "Verify Activity";
-    private static int checkCase = -1;
+    private final String TAG = "Verify-Activity";
+    private static int checkCase = -100;
     private static final int REQUEST_CODE_PHOTO = 100;
     private static final int REQUEST_CODE_VOTER_ID = 200;
 
-    private LinearLayout faceButton;
-    private LinearLayout VoterIdButton;
-    private LinearLayout LocationButton;
+    Dialog myDialog;
+    private LinearLayout faceButton, VoterIdButton, LocationButton;
     private Button requestButton;
+    private ImageView faceToggleImage, VoterIdToggleImage , LocationToggleImage;
+    Bitmap faceImage , voterIdImage ;
+    public static TextView errorMessage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify);
 
         myDialog = new Dialog(this);
+        errorMessage = findViewById(R.id.photo_error_message);
 
         faceButton = findViewById(R.id.face_detection_button);
+        faceToggleImage = findViewById(R.id.face_image_toggle);
         faceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,6 +61,7 @@ public class VerifyActivity extends AppCompatActivity {
         });
 
         VoterIdButton = findViewById(R.id.voterID_button);
+        VoterIdToggleImage = findViewById(R.id.voter_ID_image_toggle);
         VoterIdButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,10 +71,11 @@ public class VerifyActivity extends AppCompatActivity {
         });
 
         LocationButton = findViewById(R.id.location_button);
+        LocationToggleImage = findViewById(R.id.location_image_toggle);
         LocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setLocation();
+                setLocation(VerifyActivity.this, LocationToggleImage);
             }
         });
 
@@ -71,13 +83,39 @@ public class VerifyActivity extends AppCompatActivity {
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(VerifyActivity.this, "Requesting", Toast.LENGTH_SHORT).show();
+                Toast.makeText(VerifyActivity.this, "Requesting...", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void setLocation() {
-        //TODO: setting the location using a pop-up
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == CAMERA_PERMISSION_CODE){
+            if(grantResults.length > 0 && grantResults[0]== PackageManager.PERMISSION_GRANTED){
+                //Permission Granted
+                openCamera();
+            }
+        }else{
+            Toast.makeText(this, "Camera Permission denied", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode == REQUEST_CODE_PHOTO && resultCode == RESULT_OK){
+            Log.w(TAG, "onActivityResult: Photo captured successfully");
+            faceImage = (Bitmap) data.getExtras().get("data");
+            detectFaces(this, faceImage, faceToggleImage);
+        }
+        else if(requestCode == REQUEST_CODE_VOTER_ID && resultCode == RESULT_OK){
+            Log.w(TAG, "onActivityResult: VoterID captured successfully");
+            voterIdImage = (Bitmap) data.getExtras().get("data");
+            detectVoterID(this, voterIdImage, VoterIdToggleImage);
+        }
+        else{
+            Log.w(TAG, "onActivityResult: Failed to capture the photo");
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void checkCameraPermission(){
@@ -105,7 +143,6 @@ public class VerifyActivity extends AppCompatActivity {
     }
 
     private void openCamera() {
-        //TODO: retrieve the bitmap from Camera
         Intent takePictureIntent = new Intent("android.media.action.IMAGE_CAPTURE");
         if(checkCase == 0){
             startActivityForResult(takePictureIntent, REQUEST_CODE_PHOTO);
@@ -128,30 +165,5 @@ public class VerifyActivity extends AppCompatActivity {
         });
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         myDialog.show();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == CAMERA_PERMISSION_CODE){
-            if(grantResults.length > 0 && grantResults[0]== PackageManager.PERMISSION_GRANTED){
-                //Permission Granted
-                openCamera();
-            }
-        }else{
-            Toast.makeText(this, "Camera Permission denied", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        //TODO: Save the file and change the toggle
-        if(requestCode == REQUEST_CODE_PHOTO && resultCode == RESULT_OK){
-            Log.w(TAG, "onActivityResult: Photo captured successfully");
-        }else if(requestCode == REQUEST_CODE_VOTER_ID && resultCode == RESULT_OK){
-            Log.w(TAG, "onActivityResult: VoterID captured successfully");
-        }else{
-            Log.w(TAG, "onActivityResult: Failed to capture the photo");
-        }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 }
