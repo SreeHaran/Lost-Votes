@@ -2,7 +2,6 @@ package com.sreeharan.myvote_mobileapp;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -13,9 +12,9 @@ public class DetailsClass {
         //TODO: setting the location information by user
         Toast.makeText(context, "Setting Location", Toast.LENGTH_SHORT).show();
         if(1>0) {
-            toggleImage.setImageResource(R.drawable.ic_baseline_check_circle_24);
+            toggleImage.setImageResource(R.drawable.correct_symbol);
         }else{
-            toggleImage.setImageResource(R.drawable.ic_baseline_cancel_24);
+            toggleImage.setImageResource(R.drawable.wrong_symbol);
         }
     }
 

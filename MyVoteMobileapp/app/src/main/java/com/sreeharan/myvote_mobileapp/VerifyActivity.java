@@ -2,11 +2,14 @@ package com.sreeharan.myvote_mobileapp;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,11 +37,13 @@ public class VerifyActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_PHOTO = 100;
     private static final int REQUEST_CODE_VOTER_ID = 200;
 
+    private ConnectivityManager cm;
     Dialog myDialog;
     private LinearLayout faceButton, VoterIdButton, LocationButton;
     private Button requestButton;
     private ImageView faceToggleImage, VoterIdToggleImage , LocationToggleImage;
     Bitmap faceImage , voterIdImage ;
+    private LinearLayout actualLayout, noConnectionLayout;
     public static TextView errorMessage;
 
     @Override
@@ -49,6 +54,9 @@ public class VerifyActivity extends AppCompatActivity {
         myDialog = new Dialog(this);
         errorMessage = findViewById(R.id.photo_error_message);
 
+        actualLayout = findViewById(R.id.actual_layout);
+        noConnectionLayout = findViewById(R.id.no_connection_layout);
+
         faceButton = findViewById(R.id.face_detection_button);
         faceToggleImage = findViewById(R.id.face_image_toggle);
         faceButton.setOnClickListener(new View.OnClickListener() {
@@ -56,7 +64,6 @@ public class VerifyActivity extends AppCompatActivity {
             public void onClick(View v) {
                 checkCase = 0;
                 checkCameraPermission();
-
             }
         });
 
@@ -83,9 +90,17 @@ public class VerifyActivity extends AppCompatActivity {
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(VerifyActivity.this, "Requesting...", Toast.LENGTH_SHORT).show();
+                if(!isConnected()){
+                    noConnectionLayout.setVisibility(View.VISIBLE);
+                    actualLayout.setVisibility(View.INVISIBLE);
+                }
             }
         });
+
+        if(!isConnected()){
+            noConnectionLayout.setVisibility(View.VISIBLE);
+            actualLayout.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -165,5 +180,13 @@ public class VerifyActivity extends AppCompatActivity {
         });
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         myDialog.show();
+    }
+
+    private boolean isConnected(){
+        cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 }

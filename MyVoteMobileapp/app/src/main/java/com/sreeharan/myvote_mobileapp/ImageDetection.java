@@ -2,25 +2,14 @@ package com.sreeharan.myvote_mobileapp;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
-import com.google.mlkit.vision.common.InputImage;
-import com.google.mlkit.vision.text.Text;
-import com.google.mlkit.vision.text.TextRecognition;
-import com.google.mlkit.vision.text.TextRecognizer;
 
 import static com.sreeharan.myvote_mobileapp.VerifyActivity.errorMessage;
 
@@ -44,15 +33,15 @@ public class ImageDetection {
 
         // If there are no faces detected, show a Toast message
         if (faces.size() == 0) {
-            detection.setImageResource(R.drawable.ic_baseline_cancel_24);
+            detection.setImageResource(R.drawable.wrong_symbol);
             errorMessage.setVisibility(View.VISIBLE);
             errorMessage.setText("No face has been detected in the picture");
         }else if(faces.size() == 1){
-            detection.setImageResource(R.drawable.ic_baseline_check_circle_24);
+            detection.setImageResource(R.drawable.correct_symbol);
             errorMessage.setVisibility(View.INVISIBLE);
         }
         else if(faces.size()>1){
-            detection.setImageResource(R.drawable.ic_baseline_cancel_24);
+            detection.setImageResource(R.drawable.wrong_symbol);
             errorMessage.setVisibility(View.VISIBLE);
             errorMessage.setText("Multiple faces has been detected");
         }
