@@ -1,24 +1,36 @@
 package com.sreeharan.myvote_mobileapp;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.widget.ImageView;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.util.Log;
 import android.widget.Toast;
 
+import static com.sreeharan.myvote_mobileapp.VerifyActivity.locationCheck;
+import static com.sreeharan.myvote_mobileapp.VerifyActivity.IDCheck;
+import static com.sreeharan.myvote_mobileapp.VerifyActivity.faceCheck;
+
+
 public class DetailsClass {
-    static Bundle informations;
-    static void setLocation(Context context,ImageView toggleImage){
-        //TODO: setting the location information by user
-        Toast.makeText(context, "Setting Location", Toast.LENGTH_SHORT).show();
-        if(1>0) {
-            toggleImage.setImageResource(R.drawable.correct_symbol);
+
+    void sendingRequest(Context context, boolean mFaceCheck, boolean voteIdCheck, boolean mLocationCheck){
+        //TODO: add the face image, voterID image, location details
+        Log.e("DetailsClass", "sendingRequest: checking"+mFaceCheck+" - "+voteIdCheck+" - "+mLocationCheck);
+        if(mFaceCheck && voteIdCheck && mLocationCheck){
+            Toast.makeText(context, "Request Sent", Toast.LENGTH_SHORT).show();
+            context.startActivity(new Intent(context, MainActivity.class));
+            faceCheck = false; IDCheck = false; locationCheck = false;
         }else{
-            toggleImage.setImageResource(R.drawable.wrong_symbol);
+            Toast.makeText(context, "Failed to send request check all the fields are checked", Toast.LENGTH_SHORT).show();
         }
     }
 
-    static void addInformation(Bitmap Image, int code){
-        //TODO: add the face image, voterID image, location details
+    public boolean isConnected(Context context, ConnectivityManager cm){
+        cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 }

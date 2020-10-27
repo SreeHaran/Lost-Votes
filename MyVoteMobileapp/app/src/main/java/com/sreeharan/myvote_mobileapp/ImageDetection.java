@@ -11,8 +11,10 @@ import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 
-import static com.sreeharan.myvote_mobileapp.VerifyActivity.errorMessage;
-
+import static com.sreeharan.myvote_mobileapp.VerifyActivity.IDCheck;
+import static com.sreeharan.myvote_mobileapp.VerifyActivity.faceCheck;
+import static com.sreeharan.myvote_mobileapp.VerifyActivity.faceErrorMessage;
+import static com.sreeharan.myvote_mobileapp.VerifyActivity.voterIDErrorMessage;
 public class ImageDetection {
 
     static void detectFaces(Context context, Bitmap picture, ImageView detection) {
@@ -32,18 +34,20 @@ public class ImageDetection {
         Log.w("FaceDetectionClass", "detectFaces: number of faces = " + faces.size());
 
         // If there are no faces detected, show a Toast message
+        faceErrorMessage.setVisibility(View.VISIBLE);
         if (faces.size() == 0) {
             detection.setImageResource(R.drawable.wrong_symbol);
-            errorMessage.setVisibility(View.VISIBLE);
-            errorMessage.setText("No face has been detected in the picture");
+            faceErrorMessage.setText("No face has been detected in the picture");
+            faceCheck = false;
         }else if(faces.size() == 1){
             detection.setImageResource(R.drawable.correct_symbol);
-            errorMessage.setVisibility(View.INVISIBLE);
+            faceErrorMessage.setText("Face Detection Successful");
+            faceCheck = true;
         }
         else if(faces.size()>1){
             detection.setImageResource(R.drawable.wrong_symbol);
-            errorMessage.setVisibility(View.VISIBLE);
-            errorMessage.setText("Multiple faces has been detected");
+            faceErrorMessage.setText("Multiple faces has been detected");
+            faceCheck = false;
         }
         // Release the detector
         detector.release();
@@ -51,5 +55,15 @@ public class ImageDetection {
 
     static void detectVoterID(Context context, Bitmap picture, ImageView detection){
         //TODO: detect the voter ID card
+        voterIDErrorMessage.setVisibility(View.VISIBLE);
+        if(picture != null){
+            detection.setImageResource(R.drawable.correct_symbol);
+            voterIDErrorMessage.setText("Voter ID detection Successful");
+            IDCheck = true;
+        }else{
+            detection.setImageResource(R.drawable.wrong_symbol);
+            voterIDErrorMessage.setText("Voter ID detection failed");
+            IDCheck = false;
+        }
     }
 }

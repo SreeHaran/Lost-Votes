@@ -15,7 +15,7 @@
         android:theme="@style/Theme.MyVoteMobileApp">
         <activity
             android:name=".VerifyActivity"
-            android:parentActivityName=".ChangeLocationActivity" />
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ChangeLocationActivity"
             android:parentActivityName=".MainActivity" />

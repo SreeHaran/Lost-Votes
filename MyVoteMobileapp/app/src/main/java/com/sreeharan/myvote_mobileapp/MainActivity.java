@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private ConnectivityManager cm;
     Button changeLocationButton;
     LinearLayout noConnection, actualLayout;
+    DetailsClass details = new DetailsClass();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,16 +40,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-        if(!isConnected()){
+        if(!(details.isConnected(this, cm))){
             noConnection.setVisibility(View.VISIBLE);
             actualLayout.setVisibility(View.INVISIBLE);
         }
-    }
-    private boolean isConnected(){
-        cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 }

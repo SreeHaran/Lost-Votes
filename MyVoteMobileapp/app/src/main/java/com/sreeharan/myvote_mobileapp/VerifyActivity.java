@@ -1,6 +1,7 @@
 package com.sreeharan.myvote_mobileapp;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +10,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,7 +27,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import static com.sreeharan.myvote_mobileapp.ImageDetection.*;
-import static com.sreeharan.myvote_mobileapp.DetailsClass.*;
 
 public class VerifyActivity extends AppCompatActivity {
 
@@ -37,14 +36,16 @@ public class VerifyActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_PHOTO = 100;
     private static final int REQUEST_CODE_VOTER_ID = 200;
 
+    public static boolean faceCheck = false, IDCheck = false, locationCheck = false;
     private ConnectivityManager cm;
     Dialog myDialog;
-    private LinearLayout faceButton, VoterIdButton, LocationButton;
-    private Button requestButton;
     private ImageView faceToggleImage, VoterIdToggleImage , LocationToggleImage;
     Bitmap faceImage , voterIdImage ;
     private LinearLayout actualLayout, noConnectionLayout;
-    public static TextView errorMessage;
+    public static TextView faceErrorMessage, voterIDErrorMessage;
+    public TextView locationMessage;
+    DetailsClass details = new DetailsClass();
+    LocationSetting locationSetting = new LocationSetting();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,52 +53,57 @@ public class VerifyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_verify);
 
         myDialog = new Dialog(this);
-        errorMessage = findViewById(R.id.photo_error_message);
+        locationMessage = findViewById(R.id.location_message);
+        faceErrorMessage = findViewById(R.id.face_detection_message);
+        voterIDErrorMessage = findViewById(R.id.voter_id_detection_message);
 
         actualLayout = findViewById(R.id.actual_layout);
         noConnectionLayout = findViewById(R.id.no_connection_layout);
 
-        faceButton = findViewById(R.id.face_detection_button);
+        LinearLayout faceButton = findViewById(R.id.face_detection_button);
         faceToggleImage = findViewById(R.id.face_image_toggle);
         faceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                networkUI();
                 checkCase = 0;
-                checkCameraPermission();
+                checkCameraPermission(VerifyActivity.this);
             }
         });
 
-        VoterIdButton = findViewById(R.id.voterID_button);
+        LinearLayout voterIdButton = findViewById(R.id.voterID_button);
         VoterIdToggleImage = findViewById(R.id.voter_ID_image_toggle);
-        VoterIdButton.setOnClickListener(new View.OnClickListener() {
+        voterIdButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                networkUI();
                 checkCase = 1;
-                checkCameraPermission();
+                checkCameraPermission(VerifyActivity.this);
             }
         });
 
-        LocationButton = findViewById(R.id.location_button);
+        LinearLayout locationButton = findViewById(R.id.location_button);
         LocationToggleImage = findViewById(R.id.location_image_toggle);
-        LocationButton.setOnClickListener(new View.OnClickListener() {
+        locationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setLocation(VerifyActivity.this, LocationToggleImage);
+                locationSetting.setLocation(VerifyActivity.this, LocationToggleImage, locationMessage, myDialog, cm);
             }
         });
 
-        requestButton = findViewById(R.id.request_button);
+        Button requestButton = findViewById(R.id.request_button);
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isConnected()){
-                    noConnectionLayout.setVisibility(View.VISIBLE);
-                    actualLayout.setVisibility(View.INVISIBLE);
-                }
+                networkUI();
+                details.sendingRequest(VerifyActivity.this, faceCheck, IDCheck, locationCheck);
             }
         });
+        networkUI();
+    }
 
-        if(!isConnected()){
+    private void networkUI() {
+        if (!(details.isConnected(this, cm))) {
             noConnectionLayout.setVisibility(View.VISIBLE);
             actualLayout.setVisibility(View.INVISIBLE);
         }
@@ -120,11 +126,13 @@ public class VerifyActivity extends AppCompatActivity {
         if(requestCode == REQUEST_CODE_PHOTO && resultCode == RESULT_OK){
             Log.w(TAG, "onActivityResult: Photo captured successfully");
             faceImage = (Bitmap) data.getExtras().get("data");
+
             detectFaces(this, faceImage, faceToggleImage);
         }
         else if(requestCode == REQUEST_CODE_VOTER_ID && resultCode == RESULT_OK){
             Log.w(TAG, "onActivityResult: VoterID captured successfully");
             voterIdImage = (Bitmap) data.getExtras().get("data");
+
             detectVoterID(this, voterIdImage, VoterIdToggleImage);
         }
         else{
@@ -133,16 +141,15 @@ public class VerifyActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void checkCameraPermission(){
+    public void checkCameraPermission(Context context){
         if(Build.VERSION.SDK_INT<Build.VERSION_CODES.M){
-            Toast.makeText(this, "Version less than Marshmallow",
+            Toast.makeText(context, "Version less than Marshmallow",
                     Toast.LENGTH_SHORT).show();
             openCamera();
         }else{
-
             if(ContextCompat.checkSelfPermission(this,
                     Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED){
-                Toast.makeText(this, "Already Granted the permission", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Already Granted the permission", Toast.LENGTH_SHORT).show();
                 openCamera();
 
             }else{
@@ -150,7 +157,7 @@ public class VerifyActivity extends AppCompatActivity {
                         Manifest.permission.CAMERA)) {
                     CameraPermissionPopUp();
                 }else{
-                    ActivityCompat.requestPermissions(this,
+                    ActivityCompat.requestPermissions((Activity) context,
                             new String[]{Manifest.permission.CAMERA},CAMERA_PERMISSION_CODE);
                 }
             }
@@ -175,18 +182,12 @@ public class VerifyActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 myDialog.dismiss();
-                ActivityCompat.requestPermissions(VerifyActivity.this, new String[]{Manifest.permission.CAMERA},CAMERA_PERMISSION_CODE);
+                ActivityCompat.requestPermissions(VerifyActivity.this,
+                        new String[]{Manifest.permission.CAMERA},CAMERA_PERMISSION_CODE);
             }
         });
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         myDialog.show();
     }
 
-    private boolean isConnected(){
-        cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-    }
 }

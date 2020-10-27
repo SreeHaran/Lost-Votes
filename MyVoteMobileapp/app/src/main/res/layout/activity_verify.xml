@@ -45,6 +45,13 @@
                     android:text="Voter Photo"
                     android:textSize="24sp" />
             </LinearLayout>
+            <TextView
+                android:id="@+id/face_detection_message"
+                style="@style/MainActivityText"
+                android:textColor="#ffffff"
+                android:layout_marginStart="16dp"
+                android:visibility="gone"
+                tools:text="Nothing to say here"/>
 
             <LinearLayout
                 android:id="@+id/voterID_button"
@@ -69,6 +76,13 @@
                     android:text="Voter ID Photo"
                     android:textSize="24sp" />
             </LinearLayout>
+            <TextView
+                android:id="@+id/voter_id_detection_message"
+                style="@style/MainActivityText"
+                android:layout_marginStart="16dp"
+                android:textColor="#ffffff"
+                android:visibility="gone"
+                tools:text="Nothing to say here"/>
 
             <LinearLayout
                 android:id="@+id/location_button"
@@ -95,12 +109,10 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/photo_error_message"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:textColor="#ff0000"
-                android:textSize="24sp"
+                android:id="@+id/location_message"
+                style="@style/MainActivityText"
+                android:textColor="#ffffff"
+                android:layout_marginStart="16dp"
                 tools:text="Image doesn't contain a face" />
 
             <Button

@@ -47,13 +47,13 @@
 
                 <TextView
                     style="@style/MainActivityText"
-                    android:text="Father's Name: "
+                    android:text="Relative's Name: "
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/voter_father_name"
                     style="@style/MainActivityText"
-                    tools:text="name of voter" />
+                    android:text="relative name of voter" />
             </LinearLayout>
 
             <LinearLayout
@@ -69,7 +69,7 @@
                 <TextView
                     android:id="@+id/voterID_number"
                     style="@style/MainActivityText"
-                    tools:text="ABC123456" />
+                    android:text="ABC123456" />
             </LinearLayout>
 
             <LinearLayout
@@ -85,7 +85,7 @@
                 <TextView
                     android:id="@+id/voter_sex"
                     style="@style/MainActivityText"
-                    tools:text="Male" />
+                    android:text="Male" />
             </LinearLayout>
 
             <LinearLayout
@@ -101,7 +101,7 @@
                 <TextView
                     android:id="@+id/voter_dob"
                     style="@style/MainActivityText"
-                    tools:text="23 Mar 2002" />
+                    android:text="23 Mar 2002" />
             </LinearLayout>
 
             <LinearLayout
@@ -117,7 +117,7 @@
                 <TextView
                     android:id="@+id/voter_age"
                     style="@style/MainActivityText"
-                    tools:text="18" />
+                    android:text="18" />
             </LinearLayout>
 
             <TextView
@@ -128,7 +128,7 @@
             <TextView
                 android:id="@+id/voter_address"
                 style="@style/MainActivityText"
-                tools:text="Random address,\nAdayar \nChennai \nTamil nadu " />
+                android:text="Random address,\nAdayar \nChennai \nTamil nadu " />
 
             <Button
                 android:id="@+id/change_location_button"
