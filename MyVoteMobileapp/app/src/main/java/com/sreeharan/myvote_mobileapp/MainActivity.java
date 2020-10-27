@@ -13,14 +13,28 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthProvider;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int RC_SIGN_OUT = 1;
     private ConnectivityManager cm;
     Button changeLocationButton;
     LinearLayout noConnection, actualLayout;
     DetailsClass details = new DetailsClass();
+
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
         changeLocationButton = findViewById(R.id.change_location_button);
         noConnection = findViewById(R.id.no_connection_layout);
         actualLayout = findViewById(R.id.actual_layout);
+
+        mFirebaseAuth = FirebaseAuth.getInstance();
 
         changeLocationButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -44,5 +60,34 @@ public class MainActivity extends AppCompatActivity {
             noConnection.setVisibility(View.VISIBLE);
             actualLayout.setVisibility(View.INVISIBLE);
         }
+
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if(user == null){
+                    //signed out
+                    startActivityForResult(
+                            AuthUI.getInstance()
+                                    .createSignInIntentBuilder()
+                                    .setAvailableProviders(
+                                            Collections.singletonList(new AuthUI.IdpConfig.PhoneBuilder().build())
+                                    )
+                            .build(), RC_SIGN_OUT);
+                }
+            }
+        };
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
     }
 }
