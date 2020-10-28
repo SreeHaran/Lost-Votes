@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">My Vote - Mobile app</string>
+
+    <string name="rules">
+        <br>1) Your are trying to change your polling station only for this election.\n</br>
+
+        <br>2) You cannot change your voting constituency through this app, this request is only to change location and allows you to vote different location for your own constituency.\n</br>
+
+        <br>3) Once you request to change the location of your polling station, you cannot change it again and it is fixed.\n</br>
+
+        <br>4) Your vote will still be anonymous and will be counted for your own constituency.\n</br>
+
+        <br>If you are in this page by mistake, please cancel it by leaving this page.\n</br>
+    </string>
+
 </resources>

@@ -28,18 +28,18 @@ import org.json.JSONObject;
 import static com.sreeharan.myvote_mobileapp.VerifyActivity.locationCheck;
 
 public class LocationSetting {
-    public LocationSetting(){}
-
     private final String TAG = "LocationSetting Class";
-    private String templateUrl="https://api.postalpincode.in/pincode/";
     RequestQueue mQueue;
     ProgressBar progress;
     DetailsClass details = new DetailsClass();
     EditText pincodeText;
     Button okButton;
+    private String templateUrl = "https://api.postalpincode.in/pincode/";
+    public LocationSetting() {
+    }
 
     void setLocation(Context context, ImageView toggleImage, TextView place,
-                     Dialog locationDialog, ConnectivityManager cm){
+                     Dialog locationDialog, ConnectivityManager cm) {
         Toast.makeText(context, "Setting Location", Toast.LENGTH_SHORT).show();
 
         locationDialog.setContentView(R.layout.location_popup);
@@ -52,10 +52,10 @@ public class LocationSetting {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e(TAG, "onClick: Clicked the Button" );
-                if(details.isConnected(context,cm)) {
+                Log.e(TAG, "onClick: Clicked the Button");
+                if (details.isConnected(context, cm)) {
                     jsonParse(pincodeText.getText().toString().trim(), place, toggleImage, locationDialog);
-                }else{
+                } else {
                     locationDialog.dismiss();
                     Toast.makeText(context, "Check your internet Connection", Toast.LENGTH_SHORT).show();
                 }
@@ -65,27 +65,27 @@ public class LocationSetting {
         locationDialog.show();
     }
 
-    private void jsonParse(String pincode, TextView place, ImageView toggle, Dialog locationDialog){
-        String url = templateUrl+String.valueOf(pincodeText.getText());
-        Log.e(TAG, "jsonParse: Went into the method"+url );
+    private void jsonParse(String pincode, TextView place, ImageView toggle, Dialog locationDialog) {
+        String url = templateUrl + String.valueOf(pincodeText.getText());
+        Log.e(TAG, "jsonParse: Went into the method" + url);
         progress.setVisibility(View.VISIBLE);
         pincodeText.setVisibility(View.INVISIBLE);
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        Log.e(TAG, "onResponse: returned good\n"+response );
+                        Log.e(TAG, "onResponse: returned good\n" + response);
                         try {
-                            Log.e(TAG, "onResponse: "+response.length() );
+                            Log.e(TAG, "onResponse: " + response.length());
                             JSONObject root = response.getJSONObject(0);
-                            JSONArray postOffice = root.getJSONArray("PostOffice");
-                            if(postOffice.length()!=0) {
+                            try {
+                                JSONArray postOffice = root.getJSONArray("PostOffice");
                                 JSONObject object = postOffice.getJSONObject(0);
                                 place.setText(object.getString("Division") + " - " + pincode);
                                 toggle.setImageResource(R.drawable.correct_symbol);
                                 locationCheck = true;
-                            }else{
-                                place.setText(pincode+" is invalid");
+                            } catch (JSONException e) {
+                                place.setText(pincode + " is invalid");
                                 toggle.setImageResource(R.drawable.wrong_symbol);
                                 locationCheck = false;
                             }
@@ -100,7 +100,9 @@ public class LocationSetting {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
                 progress.setVisibility(View.GONE);
-                Log.e(TAG, "onResponse: returned error" );
+                toggle.setImageResource(R.drawable.wrong_symbol);
+                place.setText(pincode + " is invalid");
+                Log.e(TAG, "onResponse: returned error");
                 locationCheck = false;
             }
         });

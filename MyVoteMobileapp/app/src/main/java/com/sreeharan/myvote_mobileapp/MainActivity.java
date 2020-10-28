@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     Button changeLocationButton;
     LinearLayout noConnection, actualLayout;
     DetailsClass details = new DetailsClass();
+    TextView voterName;
+
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         changeLocationButton = findViewById(R.id.change_location_button);
         noConnection = findViewById(R.id.no_connection_layout);
         actualLayout = findViewById(R.id.actual_layout);
+        voterName = findViewById(R.id.voter_name);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
@@ -74,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
                                             Collections.singletonList(new AuthUI.IdpConfig.PhoneBuilder().build())
                                     )
                             .build(), RC_SIGN_OUT);
+                }else{
+                    voterName.setText(user.getDisplayName());
                 }
             }
         };
