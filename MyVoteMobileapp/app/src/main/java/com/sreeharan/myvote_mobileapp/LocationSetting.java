@@ -34,7 +34,7 @@ public class LocationSetting {
     DetailsClass details = new DetailsClass();
     EditText pincodeText;
     Button okButton;
-    private String templateUrl = "https://api.postalpincode.in/pincode/";
+    private final String templateUrl = "https://api.postalpincode.in/pincode/";
     public LocationSetting() {
     }
 
@@ -49,16 +49,13 @@ public class LocationSetting {
 
         mQueue = Volley.newRequestQueue(context);
 
-        okButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.e(TAG, "onClick: Clicked the Button");
-                if (details.isConnected(context, cm)) {
-                    jsonParse(pincodeText.getText().toString().trim(), place, toggleImage, locationDialog);
-                } else {
-                    locationDialog.dismiss();
-                    Toast.makeText(context, "Check your internet Connection", Toast.LENGTH_SHORT).show();
-                }
+        okButton.setOnClickListener(v -> {
+            Log.e(TAG, "onClick: Clicked the Button");
+            if (details.isConnected(context, cm)) {
+                jsonParse(pincodeText.getText().toString().trim(), place, toggleImage, locationDialog);
+            } else {
+                locationDialog.dismiss();
+                Toast.makeText(context, "Check your internet Connection", Toast.LENGTH_SHORT).show();
             }
         });
         locationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -66,46 +63,40 @@ public class LocationSetting {
     }
 
     private void jsonParse(String pincode, TextView place, ImageView toggle, Dialog locationDialog) {
-        String url = templateUrl + String.valueOf(pincodeText.getText());
+        String url = templateUrl + pincodeText.getText();
         Log.e(TAG, "jsonParse: Went into the method" + url);
         progress.setVisibility(View.VISIBLE);
         pincodeText.setVisibility(View.INVISIBLE);
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.e(TAG, "onResponse: returned good\n" + response);
+                response -> {
+                    Log.e(TAG, "onResponse: returned good\n" + response);
+                    try {
+                        Log.e(TAG, "onResponse: " + response.length());
+                        JSONObject root = response.getJSONObject(0);
                         try {
-                            Log.e(TAG, "onResponse: " + response.length());
-                            JSONObject root = response.getJSONObject(0);
-                            try {
-                                JSONArray postOffice = root.getJSONArray("PostOffice");
-                                JSONObject object = postOffice.getJSONObject(0);
-                                place.setText(object.getString("Division") + " - " + pincode);
-                                toggle.setImageResource(R.drawable.correct_symbol);
-                                locationCheck = true;
-                            } catch (JSONException e) {
-                                place.setText(pincode + " is invalid");
-                                toggle.setImageResource(R.drawable.wrong_symbol);
-                                locationCheck = false;
-                            }
+                            JSONArray postOffice = root.getJSONArray("PostOffice");
+                            JSONObject object = postOffice.getJSONObject(0);
+                            place.setText(object.getString("Division") + " - " + pincode);
+                            toggle.setImageResource(R.drawable.correct_symbol);
+                            locationCheck = true;
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            place.setText(pincode + " is invalid");
+                            toggle.setImageResource(R.drawable.wrong_symbol);
+                            locationCheck = false;
                         }
-                        progress.setVisibility(View.GONE);
-                        locationDialog.dismiss();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-                progress.setVisibility(View.GONE);
-                toggle.setImageResource(R.drawable.wrong_symbol);
-                place.setText(pincode + " is invalid");
-                Log.e(TAG, "onResponse: returned error");
-                locationCheck = false;
-            }
-        });
+                    progress.setVisibility(View.GONE);
+                    locationDialog.dismiss();
+                }, error -> {
+                    error.printStackTrace();
+                    progress.setVisibility(View.GONE);
+                    toggle.setImageResource(R.drawable.wrong_symbol);
+                    place.setText(pincode + " is invalid");
+                    Log.e(TAG, "onResponse: returned error");
+                    locationCheck = false;
+                });
         mQueue.add(request);
     }
 }

@@ -37,7 +37,7 @@
                 <TextView
                     android:id="@+id/voter_name"
                     style="@style/MainActivityText"
-                    tools:text="Sree Haran" />
+                    tools:text="proxy name" />
             </LinearLayout>
 
             <LinearLayout

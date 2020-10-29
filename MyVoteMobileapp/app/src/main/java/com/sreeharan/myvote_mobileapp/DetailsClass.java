@@ -15,7 +15,6 @@ import static com.sreeharan.myvote_mobileapp.VerifyActivity.faceCheck;
 public class DetailsClass {
 
     void sendingRequest(Context context, boolean mFaceCheck, boolean voteIdCheck, boolean mLocationCheck){
-        //TODO: add the face image, voterID image, location details
         Log.e("DetailsClass", "sendingRequest: checking"+mFaceCheck+" - "+voteIdCheck+" - "+mLocationCheck);
         if(mFaceCheck && voteIdCheck && mLocationCheck){
             Toast.makeText(context, "Request Sent", Toast.LENGTH_SHORT).show();

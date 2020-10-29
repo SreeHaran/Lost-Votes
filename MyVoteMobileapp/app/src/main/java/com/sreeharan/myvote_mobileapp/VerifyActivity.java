@@ -62,42 +62,28 @@ public class VerifyActivity extends AppCompatActivity {
 
         LinearLayout faceButton = findViewById(R.id.face_detection_button);
         faceToggleImage = findViewById(R.id.face_image_toggle);
-        faceButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                networkUI();
-                checkCase = 0;
-                checkCameraPermission(VerifyActivity.this);
-            }
+        faceButton.setOnClickListener(v -> {
+            networkUI();
+            checkCase = 0;
+            checkCameraPermission(VerifyActivity.this);
         });
 
         LinearLayout voterIdButton = findViewById(R.id.voterID_button);
         VoterIdToggleImage = findViewById(R.id.voter_ID_image_toggle);
-        voterIdButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                networkUI();
-                checkCase = 1;
-                checkCameraPermission(VerifyActivity.this);
-            }
+        voterIdButton.setOnClickListener(v -> {
+            networkUI();
+            checkCase = 1;
+            checkCameraPermission(VerifyActivity.this);
         });
 
         LinearLayout locationButton = findViewById(R.id.location_button);
         LocationToggleImage = findViewById(R.id.location_image_toggle);
-        locationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                locationSetting.setLocation(VerifyActivity.this, LocationToggleImage, locationMessage, myDialog, cm);
-            }
-        });
+        locationButton.setOnClickListener(v -> locationSetting.setLocation(VerifyActivity.this, LocationToggleImage, locationMessage, myDialog, cm));
 
         Button requestButton = findViewById(R.id.request_button);
-        requestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                networkUI();
-                details.sendingRequest(VerifyActivity.this, faceCheck, IDCheck, locationCheck);
-            }
+        requestButton.setOnClickListener(v -> {
+            networkUI();
+            details.sendingRequest(VerifyActivity.this, faceCheck, IDCheck, locationCheck);
         });
         networkUI();
     }
@@ -133,7 +119,7 @@ public class VerifyActivity extends AppCompatActivity {
             Log.w(TAG, "onActivityResult: VoterID captured successfully");
             voterIdImage = (Bitmap) data.getExtras().get("data");
 
-            detectVoterID(this, voterIdImage, VoterIdToggleImage);
+            detectVoterID(voterIdImage, VoterIdToggleImage);
         }
         else{
             Log.w(TAG, "onActivityResult: Failed to capture the photo");
@@ -178,13 +164,10 @@ public class VerifyActivity extends AppCompatActivity {
     public void CameraPermissionPopUp(){
         myDialog.setContentView(R.layout.camera_popup);
         Button okButton = myDialog.findViewById(R.id.ok_button);
-        okButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                myDialog.dismiss();
-                ActivityCompat.requestPermissions(VerifyActivity.this,
-                        new String[]{Manifest.permission.CAMERA},CAMERA_PERMISSION_CODE);
-            }
+        okButton.setOnClickListener(v -> {
+            myDialog.dismiss();
+            ActivityCompat.requestPermissions(VerifyActivity.this,
+                    new String[]{Manifest.permission.CAMERA},CAMERA_PERMISSION_CODE);
         });
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         myDialog.show();

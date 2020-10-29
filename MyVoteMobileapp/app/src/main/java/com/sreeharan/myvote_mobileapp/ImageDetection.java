@@ -53,8 +53,7 @@ public class ImageDetection {
         detector.release();
     }
 
-    static void detectVoterID(Context context, Bitmap picture, ImageView detection){
-        //TODO: detect the voter ID card
+    static void detectVoterID(Bitmap picture, ImageView detection){
         voterIDErrorMessage.setVisibility(View.VISIBLE);
         if(picture != null){
             detection.setImageResource(R.drawable.correct_symbol);

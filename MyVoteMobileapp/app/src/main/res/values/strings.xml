@@ -12,5 +12,9 @@
 
         <br>If you are in this page by mistake, please cancel it by leaving this page.\n</br>
     </string>
+    <string name="camera_popup_details">
+        This app needs Camera permission for verifying the photo of user and for verifying the voter ID of the user.\n
+        Allow the camera permission for this app in the following dialog.
+    </string>
 
 </resources>

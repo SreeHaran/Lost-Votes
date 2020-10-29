@@ -14,12 +14,9 @@ public class ChangeLocationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_location);
         Button accepting= findViewById(R.id.accepting_button);
-        accepting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(ChangeLocationActivity.this,VerifyActivity.class);
-                startActivity(i);
-            }
+        accepting.setOnClickListener(v -> {
+            Intent i = new Intent(ChangeLocationActivity.this,VerifyActivity.class);
+            startActivity(i);
         });
     }
 }
