@@ -55,28 +55,48 @@ body{
   margin: 12px 0;
 }
 .vote-button {
+
   padding: 140px 90px;
   background-color: darkslategray;
 }
-.button{
+.button1,.button2,.button3{
   height: 100px;
   width: 100px;
   padding-right: 10px;
   margin-right: 50px;
-  background-color: firebrick;
   font-size: 20px;
-  color: thistle;
+  color:hsl(hue, saturation, lightness);
 }
-.enter-button{
-  width: 100px;
-  height: 50px;
-  margin-top: 40px;
-  font-size: large;
+.button1{
+  color:rgb(5, 87, 238);
+  background:  tomato;
+}
+.button2{
+  color:crimson;
+  background-color: teal;
+}
+.button3{
+  color:seagreen;
+  background-color: brown;
 }
 .vote-submit{
   color: #4caf50;
   margin-top: 140px;
 }
 .enter-button{
+  size: 40px 60px;
   background-color: hsl(hue, saturation, lightness);
+}
+h2{
+  font-style: oblique;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: #4caf50;
+  font-size: xx-large;
+  display: inline-block;
+}
+span{
+  background-color: transparent;
+  color: violet;
+  display: block;
+  border-bottom: 2px solid #4caf50;
 }
