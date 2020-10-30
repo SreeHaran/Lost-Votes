@@ -3,7 +3,7 @@ body{
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  background: url(e0a230f4-d8c1-40cb-a98e-782d4ef8b0bf.jpg) no-repeat;
+  background: url(assets/e0a230f4-d8c1-40cb-a98e-782d4ef8b0bf.jpg);
   background-size: cover;
 }
 .login-box{
