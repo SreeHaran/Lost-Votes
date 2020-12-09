@@ -136,6 +136,12 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:text="Request to change location" />
+            <Button
+                android:id="@+id/voting_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="Scan and Vote" />
         </LinearLayout>
     </ScrollView>
 

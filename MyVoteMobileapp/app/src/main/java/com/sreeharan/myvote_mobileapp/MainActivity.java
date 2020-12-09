@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.firebase.ui.auth.AuthUI;
@@ -23,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_OUT = 1;
     private ConnectivityManager cm;
-    Button changeLocationButton;
+    Button changeLocationButton, VoteButton;
     LinearLayout noConnection, actualLayout;
     DetailsClass details = new DetailsClass();
     TextView voterName;
@@ -41,14 +40,22 @@ public class MainActivity extends AppCompatActivity {
         noConnection = findViewById(R.id.no_connection_layout);
         actualLayout = findViewById(R.id.actual_layout);
         voterName = findViewById(R.id.voter_name);
+        VoteButton = findViewById(R.id.voting_button);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
         changeLocationButton.setOnClickListener(v -> {
             Toast.makeText(MainActivity.this, "Requesting to change the location",
                     Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(MainActivity.this,ChangeLocationActivity.class);
+            Intent i = new Intent(MainActivity.this, ChangeLocationActivity.class);
             startActivity(i);
+        });
+        VoteButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, QrScannerActivity.class);
+                startActivity(i);
+            }
         });
         if(!(details.isConnected(this, cm))){
             noConnection.setVisibility(View.VISIBLE);
