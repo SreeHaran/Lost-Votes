@@ -1,0 +1,62 @@
+.party {
+    float: left;
+    width: 25%;
+  }
+  
+  .icon {
+    position: relative;
+  }
+  .nextline{
+    margin-top: 220px;
+  }
+  .button1,.button2,.button3,.button4,.button5,.button6,.button7,.button8{
+    height: 100px;
+    width: 220px;
+    padding-top: 20px;
+    padding-right: 10px;
+    margin-right: 50px;
+    margin-left: 40px;
+    font-size: 20px;
+    color:hsl(hue, saturation, lightness);
+    color: aliceblue;
+    border-bottom: 2px solid #4caf50;
+    cursor: pointer;
+  }
+  .button1{
+    background:  tomato;
+  }
+  .button2{
+    background-color: teal;
+  }
+  .button3{
+    background-color: brown;
+  }
+  .button4{
+    background-color: cadetblue;
+  }
+  .button5{
+background-color: blue;
+  }
+  .button6{
+background-color: darkmagenta;
+  }
+  .button7{
+background-color: goldenrod;
+  }
+  .button8{
+background-color: forestgreen;
+  }
+  .tip{
+      color:crimson;
+  }
+  .header{
+    padding-left: 120px;
+    background-color:thistle;
+  }
+  .header h2{
+      color:darkred;
+      padding-left: 25px;
+  }
+  span{
+    color: aliceblue;
+  }

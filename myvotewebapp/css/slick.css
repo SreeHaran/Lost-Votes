@@ -1,0 +1,52 @@
+.logo {
+    margin-left: 540px;
+    width: 184px;
+    margin-top: 20px;
+  }
+  .bio{
+    padding: 20px 40px;
+    font-size: 20px; 
+    background-color: darkgray;
+  }
+.details{
+  padding-top: 7px;
+  height: 0px;
+  margin-left: 300px;
+}
+.address{
+  margin-left: 700px;
+}
+span{
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  color: deeppink;
+  padding-left: 5px;
+}
+.btn{
+  font-size: 20px;
+  color:whitesmoke;
+}
+.container {
+  width: 100px;
+  padding: 0 15px;
+  margin: 0 auto;
+  margin-left: 555px;
+}
+.message {
+  padding: 10px 20px;
+  background-color: #03913b;
+  cursor: pointer;
+  box-shadow: 0 4px #054920;
+}
+.message:active {
+  position: relative;
+  top: 7px;
+  box-shadow: none;
+}
+.aa{
+  color:red;
+  margin-left:540px;
+}
+
+
+
+  
