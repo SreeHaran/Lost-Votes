@@ -16,8 +16,6 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -29,12 +27,13 @@ import static com.sreeharan.myvote_mobileapp.VerifyActivity.locationCheck;
 
 public class LocationSetting {
     private final String TAG = "LocationSetting Class";
+    private final String templateUrl = "https://api.postalpincode.in/pincode/";
     RequestQueue mQueue;
     ProgressBar progress;
     DetailsClass details = new DetailsClass();
     EditText pincodeText;
     Button okButton;
-    private final String templateUrl = "https://api.postalpincode.in/pincode/";
+
     public LocationSetting() {
     }
 
@@ -90,13 +89,13 @@ public class LocationSetting {
                     progress.setVisibility(View.GONE);
                     locationDialog.dismiss();
                 }, error -> {
-                    error.printStackTrace();
-                    progress.setVisibility(View.GONE);
-                    toggle.setImageResource(R.drawable.wrong_symbol);
-                    place.setText(pincode + " is invalid");
-                    Log.e(TAG, "onResponse: returned error");
-                    locationCheck = false;
-                });
+            error.printStackTrace();
+            progress.setVisibility(View.GONE);
+            toggle.setImageResource(R.drawable.wrong_symbol);
+            place.setText(pincode + " is invalid");
+            Log.e(TAG, "onResponse: returned error");
+            locationCheck = false;
+        });
         mQueue.add(request);
     }
 }

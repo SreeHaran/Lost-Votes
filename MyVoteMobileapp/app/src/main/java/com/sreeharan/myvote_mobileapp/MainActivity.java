@@ -70,7 +70,10 @@ public class MainActivity extends AppCompatActivity {
                         AuthUI.getInstance()
                                 .createSignInIntentBuilder()
                                 .setAvailableProviders(
-                                        Collections.singletonList(new AuthUI.IdpConfig.PhoneBuilder().build())
+                                        Collections.singletonList(
+                                                new AuthUI.IdpConfig.PhoneBuilder()
+                                                        .build()
+                                        )
                                 )
                         .build(), RC_SIGN_OUT);
             }else{
