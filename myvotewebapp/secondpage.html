@@ -2,16 +2,21 @@
 <html>
     <head>
         <link rel="stylesheet" href= "css/style.css">
+        <script src="js/script.js"></script>
     </head>
     <body >
+      
         <audio id="myAudio" autoplay>
             <source src="css/assets/censor-beep.mp3" type="audio/mpeg" loop="true">
             Your browser does not support the audio element.
           </audio>
         <center>
             <h1 class="vote-submit">YOUR VOTE HAS BEEN SUBMITED</h1>
-            <a href="index.html"><button class="enter-button">Enter</button></a>
+            <a href="qrcodepage.html"><button class="enter-button">ENTER</button></a>
         </center>
+        <div class="alert">
+          <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        </div>
           
         <script>
           function myFunction() {
