@@ -12,7 +12,6 @@
 
         <LinearLayout
             android:id="@+id/actual_layout"
-            android:background="@drawable/app_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">

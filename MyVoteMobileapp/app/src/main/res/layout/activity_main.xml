@@ -12,15 +12,15 @@
 
         <LinearLayout
             android:id="@+id/actual_layout"
-            android:background="@drawable/main_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="8dp">
 
             <ImageView
                 android:id="@+id/voter_image"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="250dp"
                 android:layout_gravity="center"
                 android:src="@drawable/person_image" />
 
@@ -37,7 +37,7 @@
                 <TextView
                     android:id="@+id/voter_name"
                     style="@style/MainActivityText"
-                    android:text="proxy details" />
+                    tools:text="proxy details" />
             </LinearLayout>
 
             <LinearLayout
@@ -51,9 +51,9 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/voter_father_name"
+                    android:id="@+id/voter_relative_name"
                     style="@style/MainActivityText"
-                    android:text="relative name of voter" />
+                    tools:text="relative name of voter" />
             </LinearLayout>
 
             <LinearLayout
@@ -69,7 +69,7 @@
                 <TextView
                     android:id="@+id/voterID_number"
                     style="@style/MainActivityText"
-                    android:text="ABC123456" />
+                    tools:text="ABC123456" />
             </LinearLayout>
 
             <LinearLayout
@@ -79,30 +79,15 @@
 
                 <TextView
                     style="@style/MainActivityText"
-                    android:text="Sex: "
+                    android:text="Gender: "
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/voter_sex"
+                    android:id="@+id/voter_gender"
                     style="@style/MainActivityText"
-                    android:text="Male" />
+                    tools:text="Male" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/MainActivityText"
-                    android:text="DOB: "
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/voter_dob"
-                    style="@style/MainActivityText"
-                    android:text="23 Mar 2002" />
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -117,7 +102,7 @@
                 <TextView
                     android:id="@+id/voter_age"
                     style="@style/MainActivityText"
-                    android:text="18" />
+                    tools:text="18" />
             </LinearLayout>
 
             <TextView
@@ -144,6 +129,16 @@
                 android:text="Scan and Vote" />
         </LinearLayout>
     </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/loading_data"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/no_connection_layout"
