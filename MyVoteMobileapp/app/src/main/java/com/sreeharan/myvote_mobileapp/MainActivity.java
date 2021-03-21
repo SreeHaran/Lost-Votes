@@ -1,5 +1,6 @@
 package com.sreeharan.myvote_mobileapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.firebase.ui.auth.AuthUI;
@@ -24,14 +27,18 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_OUT = 1;
-    private final String REF = "Voters";
+    private final String VOTERS_REF = "Voters";
+    private final String SCANNER_REF = "QR-Code";
     private final String TAG = "Main-Activity";
+    public static String MobileNumber;
     Button changeLocationButton, VoteButton;
     LinearLayout noConnection, actualLayout;
     RelativeLayout loadingLayout;
@@ -43,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private ChildEventListener mChildEventListener;
+    private String constituency;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,10 +84,14 @@ public class MainActivity extends AppCompatActivity {
         VoteButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, QrScannerActivity.class);
-                startActivity(i);
+                IntentIntegrator intentIntegrator = new IntentIntegrator(MainActivity.this);
+                intentIntegrator.setOrientationLocked(true)
+                        .setBeepEnabled(true)
+                        .setPrompt("For Flash use Volume Up key")
+                        .setCaptureActivity(Capture.class).initiateScan();
             }
         });
+
         if (!(details.isConnected(this, cm))) {
             noConnection.setVisibility(View.VISIBLE);
             actualLayout.setVisibility(View.INVISIBLE);
@@ -102,12 +114,13 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 actualLayout.setVisibility(View.INVISIBLE);
                 loadingLayout.setVisibility(View.VISIBLE);
-                mFirebaseReference = database.getReference(REF);
+                mFirebaseReference = database.getReference(VOTERS_REF);
                 //.child(user.getPhoneNumber());
-                mFirebaseReference.child(user.getPhoneNumber()).addValueEventListener(new ValueEventListener() {
+                MobileNumber = user.getPhoneNumber();
+                mFirebaseReference.child(MobileNumber).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Log.e(TAG, "onDataChange: phoneNumber: " + user.getPhoneNumber() + " exists: " + snapshot.exists() + " Children: " + snapshot.getChildren());
+                        Log.e(TAG, "onDataChange: phoneNumber: " + MobileNumber + " exists: " + snapshot.exists() + " Children: " + snapshot.getChildren());
 
                         Log.e(TAG, "onDataChange: Name: " + snapshot.child("Name").getValue());
                         Log.e(TAG, "onDataChange: Voter Id: " + snapshot.child("Voter Id").getValue());
@@ -121,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
                         gender.setText(snapshot.child("Gender").getValue().toString());
                         relativeName.setText(snapshot.child("Relative").getValue().toString());
                         age.setText(snapshot.child("Age").getValue().toString());
+                        constituency = snapshot.child("Constituency").getValue().toString();
 
                         loadingLayout.setVisibility(View.INVISIBLE);
                         actualLayout.setVisibility(View.VISIBLE);
@@ -136,7 +150,17 @@ public class MainActivity extends AppCompatActivity {
             }
         };
     }
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
+        if(intentResult.getContents() != null){
+            mFirebaseReference = database.getReference(SCANNER_REF);
+            mFirebaseReference.child(intentResult.getContents()).setValue(constituency);
+        }else{
+            Toast.makeText(this, "QR code unsuccessful", Toast.LENGTH_SHORT).show();
+        }
+    }
     @Override
     protected void onResume() {
         super.onResume();

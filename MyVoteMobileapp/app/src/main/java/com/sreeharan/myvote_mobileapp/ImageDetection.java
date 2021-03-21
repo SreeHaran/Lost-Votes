@@ -17,7 +17,7 @@ import static com.sreeharan.myvote_mobileapp.VerifyActivity.faceErrorMessage;
 import static com.sreeharan.myvote_mobileapp.VerifyActivity.voterIDErrorMessage;
 public class ImageDetection {
 
-    static void detectFaces(Context context, Bitmap picture, ImageView detection) {
+    static boolean detectFaces(Context context, Bitmap picture, ImageView detection) {
         // Create the face detector, disable tracking and enable classifications
         FaceDetector detector = new FaceDetector.Builder(context)
                 .setTrackingEnabled(false)
@@ -46,14 +46,15 @@ public class ImageDetection {
         }
         else if(faces.size()>1){
             detection.setImageResource(R.drawable.wrong_symbol);
-            faceErrorMessage.setText("Multiple faces has been detected");
+            faceErrorMessage.setText("Multiple persons has been detected");
             faceCheck = false;
         }
         // Release the detector
         detector.release();
+        return faceCheck;
     }
 
-    static void detectVoterID(Bitmap picture, ImageView detection){
+    static boolean detectVoterID(Bitmap picture, ImageView detection){
         voterIDErrorMessage.setVisibility(View.VISIBLE);
         if(picture != null){
             detection.setImageResource(R.drawable.correct_symbol);
@@ -64,5 +65,6 @@ public class ImageDetection {
             voterIDErrorMessage.setText("Voter ID detection failed");
             IDCheck = false;
         }
+        return IDCheck;
     }
 }

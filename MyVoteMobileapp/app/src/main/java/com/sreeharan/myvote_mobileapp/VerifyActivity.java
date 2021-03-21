@@ -35,7 +35,7 @@ public class VerifyActivity extends AppCompatActivity {
     private static int checkCase = -100;
     private static final int REQUEST_CODE_PHOTO = 100;
     private static final int REQUEST_CODE_VOTER_ID = 200;
-
+    String locationCode;
     public static boolean faceCheck = false, IDCheck = false, locationCheck = false;
     private ConnectivityManager cm;
     Dialog myDialog;
@@ -78,12 +78,14 @@ public class VerifyActivity extends AppCompatActivity {
 
         LinearLayout locationButton = findViewById(R.id.location_button);
         LocationToggleImage = findViewById(R.id.location_image_toggle);
-        locationButton.setOnClickListener(v -> locationSetting.setLocation(VerifyActivity.this, LocationToggleImage, locationMessage, myDialog, cm));
+        locationButton.setOnClickListener(v ->
+                locationCode = locationSetting.setLocation(VerifyActivity.this, LocationToggleImage, locationMessage, myDialog, cm));
 
         Button requestButton = findViewById(R.id.request_button);
         requestButton.setOnClickListener(v -> {
             networkUI();
-            details.sendingRequest(VerifyActivity.this, faceCheck, IDCheck, locationCheck);
+            details.sendingRequest(VerifyActivity.this, faceCheck, IDCheck, locationCheck,
+                    faceImage , voterIdImage, locationCode);
         });
         networkUI();
     }
@@ -113,13 +115,17 @@ public class VerifyActivity extends AppCompatActivity {
             Log.w(TAG, "onActivityResult: Photo captured successfully");
             faceImage = (Bitmap) data.getExtras().get("data");
 
-            detectFaces(this, faceImage, faceToggleImage);
+            if(detectFaces(this, faceImage, faceToggleImage)){
+                Log.e(TAG, "onActivityResult: Face detection Successful");
+            }
         }
         else if(requestCode == REQUEST_CODE_VOTER_ID && resultCode == RESULT_OK){
             Log.w(TAG, "onActivityResult: VoterID captured successfully");
             voterIdImage = (Bitmap) data.getExtras().get("data");
 
-            detectVoterID(voterIdImage, VoterIdToggleImage);
+            if(detectVoterID(voterIdImage, VoterIdToggleImage)){
+                Log.e(TAG, "onActivityResult: VOTER ID detection Successful");
+            }
         }
         else{
             Log.w(TAG, "onActivityResult: Failed to capture the photo");

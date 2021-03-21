@@ -37,8 +37,9 @@ public class LocationSetting {
     public LocationSetting() {
     }
 
-    void setLocation(Context context, ImageView toggleImage, TextView place,
+    String setLocation(Context context, ImageView toggleImage, TextView place,
                      Dialog locationDialog, ConnectivityManager cm) {
+        final String[] pincode = new String[1];
         Toast.makeText(context, "Setting Location", Toast.LENGTH_SHORT).show();
 
         locationDialog.setContentView(R.layout.location_popup);
@@ -51,7 +52,7 @@ public class LocationSetting {
         okButton.setOnClickListener(v -> {
             Log.e(TAG, "onClick: Clicked the Button");
             if (details.isConnected(context, cm)) {
-                jsonParse(pincodeText.getText().toString().trim(), place, toggleImage, locationDialog);
+                pincode[0] = jsonParse(pincodeText.getText().toString().trim(), place, toggleImage, locationDialog);
             } else {
                 locationDialog.dismiss();
                 Toast.makeText(context, "Check your internet Connection", Toast.LENGTH_SHORT).show();
@@ -59,9 +60,10 @@ public class LocationSetting {
         });
         locationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         locationDialog.show();
+        return pincode[0];
     }
 
-    private void jsonParse(String pincode, TextView place, ImageView toggle, Dialog locationDialog) {
+    private String jsonParse(String pincode, TextView place, ImageView toggle, Dialog locationDialog) {
         String url = templateUrl + pincodeText.getText();
         Log.e(TAG, "jsonParse: Went into the method" + url);
         progress.setVisibility(View.VISIBLE);
@@ -95,7 +97,9 @@ public class LocationSetting {
             place.setText(pincode + " is invalid");
             Log.e(TAG, "onResponse: returned error");
             locationCheck = false;
+            place.setVisibility(View.VISIBLE);
         });
         mQueue.add(request);
+        return pincode;
     }
 }
