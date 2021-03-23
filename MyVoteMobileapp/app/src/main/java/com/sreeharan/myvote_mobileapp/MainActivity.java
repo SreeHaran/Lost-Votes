@@ -1,5 +1,7 @@
 package com.sreeharan.myvote_mobileapp;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -17,6 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,7 +36,12 @@ import com.google.zxing.integration.android.IntentResult;
 
 import java.util.Collections;
 
+import static com.sreeharan.myvote_mobileapp.Notifications.NOTIFY_CHANNEL;
+
 public class MainActivity extends AppCompatActivity {
+
+    private NotificationManagerCompat notificationManager;
+    private Notification notification;
 
     private static final int RC_SIGN_OUT = 1;
     private final String VOTERS_REF = "Voters";
@@ -69,6 +78,18 @@ public class MainActivity extends AppCompatActivity {
         age = findViewById(R.id.voter_age);
 
         VoteButton = findViewById(R.id.voting_button);
+
+        Intent resultIntent = new Intent(this, ConfirmationActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 23, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        notificationManager = NotificationManagerCompat.from(this);
+        notification = new NotificationCompat.Builder(this, NOTIFY_CHANNEL)
+                .setSmallIcon(R.drawable.correct_symbol)
+                .setContentTitle("Voter Coercion?")
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .setContentInfo("Are you forced to vote for a particular party in the polling  station?")
+                .build();
 
         // Write a message to the database
         database = FirebaseDatabase.getInstance();
@@ -153,12 +174,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.e(TAG, "onActivityResult: requestCode="+requestCode+" ResultCode = "+resultCode);
+        if(requestCode != 1){
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
         if(intentResult.getContents() != null){
-            mFirebaseReference = database.getReference(SCANNER_REF);
-            mFirebaseReference.child(intentResult.getContents()).setValue(constituency);
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("Secret Code");
+            builder.setMessage(intentResult.getContents());
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    notificationManager.notify(1, notification);
+                }
+            });
+            builder.show();
+            /*mFirebaseReference = database.getReference(SCANNER_REF);
+            mFirebaseReference.child(intentResult.getContents()).setValue(constituency);*/
         }else{
             Toast.makeText(this, "QR code unsuccessful", Toast.LENGTH_SHORT).show();
+        }
         }
     }
     @Override
