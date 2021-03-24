@@ -26,26 +26,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import static com.sreeharan.myvote_mobileapp.ImageDetection.*;
+import static com.sreeharan.myvote_mobileapp.ImageDetection.detectFaces;
+import static com.sreeharan.myvote_mobileapp.ImageDetection.detectVoterID;
 
 public class VerifyActivity extends AppCompatActivity {
 
-    private final int CAMERA_PERMISSION_CODE = 23;
-    private final String TAG = "Verify-Activity";
-    private static int checkCase = -100;
     private static final int REQUEST_CODE_PHOTO = 100;
     private static final int REQUEST_CODE_VOTER_ID = 200;
-    String locationCode;
     public static boolean faceCheck = false, IDCheck = false, locationCheck = false;
-    private ConnectivityManager cm;
-    Dialog myDialog;
-    private ImageView faceToggleImage, VoterIdToggleImage , LocationToggleImage;
-    Bitmap faceImage , voterIdImage ;
-    private LinearLayout actualLayout, noConnectionLayout;
     public static TextView faceErrorMessage, voterIDErrorMessage;
+    private static int checkCase = -100;
+    private final int CAMERA_PERMISSION_CODE = 23;
+    private final String TAG = "Verify-Activity";
     public TextView locationMessage;
+    String locationCode;
+    Dialog myDialog;
+    Bitmap faceImage, voterIdImage;
     DetailsClass details = new DetailsClass();
     LocationSetting locationSetting = new LocationSetting();
+    private ConnectivityManager cm;
+    private ImageView faceToggleImage, VoterIdToggleImage, LocationToggleImage;
+    private LinearLayout actualLayout, noConnectionLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +86,7 @@ public class VerifyActivity extends AppCompatActivity {
         requestButton.setOnClickListener(v -> {
             networkUI();
             details.sendingRequest(VerifyActivity.this, faceCheck, IDCheck, locationCheck,
-                    faceImage , voterIdImage, locationCode);
+                    faceImage, voterIdImage, locationCode);
         });
         networkUI();
     }
@@ -99,58 +100,56 @@ public class VerifyActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == CAMERA_PERMISSION_CODE){
-            if(grantResults.length > 0 && grantResults[0]== PackageManager.PERMISSION_GRANTED){
+        if (requestCode == CAMERA_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //Permission Granted
                 openCamera();
             }
-        }else{
+        } else {
             Toast.makeText(this, "Camera Permission denied", Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(requestCode == REQUEST_CODE_PHOTO && resultCode == RESULT_OK){
+        if (requestCode == REQUEST_CODE_PHOTO && resultCode == RESULT_OK) {
             Log.w(TAG, "onActivityResult: Photo captured successfully");
             faceImage = (Bitmap) data.getExtras().get("data");
 
-            if(detectFaces(this, faceImage, faceToggleImage)){
+            if (detectFaces(this, faceImage, faceToggleImage)) {
                 Log.e(TAG, "onActivityResult: Face detection Successful");
             }
-        }
-        else if(requestCode == REQUEST_CODE_VOTER_ID && resultCode == RESULT_OK){
+        } else if (requestCode == REQUEST_CODE_VOTER_ID && resultCode == RESULT_OK) {
             Log.w(TAG, "onActivityResult: VoterID captured successfully");
             voterIdImage = (Bitmap) data.getExtras().get("data");
 
-            if(detectVoterID(voterIdImage, VoterIdToggleImage)){
+            if (detectVoterID(voterIdImage, VoterIdToggleImage)) {
                 Log.e(TAG, "onActivityResult: VOTER ID detection Successful");
             }
-        }
-        else{
+        } else {
             Log.w(TAG, "onActivityResult: Failed to capture the photo");
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void checkCameraPermission(Context context){
-        if(Build.VERSION.SDK_INT<Build.VERSION_CODES.M){
+    public void checkCameraPermission(Context context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             Toast.makeText(context, "Version less than Marshmallow",
                     Toast.LENGTH_SHORT).show();
             openCamera();
-        }else{
-            if(ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED){
+        } else {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(context, "Already Granted the permission", Toast.LENGTH_SHORT).show();
                 openCamera();
 
-            }else{
-                if(ActivityCompat.shouldShowRequestPermissionRationale(this,
+            } else {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                         Manifest.permission.CAMERA)) {
                     CameraPermissionPopUp();
-                }else{
+                } else {
                     ActivityCompat.requestPermissions((Activity) context,
-                            new String[]{Manifest.permission.CAMERA},CAMERA_PERMISSION_CODE);
+                            new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
                 }
             }
         }
@@ -158,22 +157,22 @@ public class VerifyActivity extends AppCompatActivity {
 
     private void openCamera() {
         Intent takePictureIntent = new Intent("android.media.action.IMAGE_CAPTURE");
-        if(checkCase == 0){
+        if (checkCase == 0) {
             startActivityForResult(takePictureIntent, REQUEST_CODE_PHOTO);
-        }else if(checkCase == 1){
+        } else if (checkCase == 1) {
             startActivityForResult(takePictureIntent, REQUEST_CODE_VOTER_ID);
-        }else{
+        } else {
             Log.w(TAG, "openCamera: integer checkCase is not set to any value");
         }
     }
 
-    public void CameraPermissionPopUp(){
+    public void CameraPermissionPopUp() {
         myDialog.setContentView(R.layout.camera_popup);
         Button okButton = myDialog.findViewById(R.id.ok_button);
         okButton.setOnClickListener(v -> {
             myDialog.dismiss();
             ActivityCompat.requestPermissions(VerifyActivity.this,
-                    new String[]{Manifest.permission.CAMERA},CAMERA_PERMISSION_CODE);
+                    new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
         });
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         myDialog.show();

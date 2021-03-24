@@ -1,11 +1,10 @@
 package com.sreeharan.myvote_mobileapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class ChangeLocationActivity extends AppCompatActivity {
 
@@ -13,9 +12,9 @@ public class ChangeLocationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_location);
-        Button accepting= findViewById(R.id.accepting_button);
+        Button accepting = findViewById(R.id.accepting_button);
         accepting.setOnClickListener(v -> {
-            Intent i = new Intent(ChangeLocationActivity.this,VerifyActivity.class);
+            Intent i = new Intent(ChangeLocationActivity.this, VerifyActivity.class);
             startActivity(i);
         });
     }

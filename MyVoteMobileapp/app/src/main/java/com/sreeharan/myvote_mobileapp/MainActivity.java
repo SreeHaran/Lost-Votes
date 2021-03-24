@@ -40,19 +40,18 @@ import static com.sreeharan.myvote_mobileapp.Notifications.NOTIFY_CHANNEL;
 
 public class MainActivity extends AppCompatActivity {
 
-    private NotificationManagerCompat notificationManager;
-    private Notification notification;
-
     private static final int RC_SIGN_OUT = 1;
+    public static String MobileNumber;
     private final String VOTERS_REF = "Voters";
     private final String SCANNER_REF = "QR-Code";
     private final String TAG = "Main-Activity";
-    public static String MobileNumber;
     Button changeLocationButton, VoteButton;
     LinearLayout noConnection, actualLayout;
     RelativeLayout loadingLayout;
     DetailsClass details = new DetailsClass();
     TextView voterName, voterId, relativeName, gender, age;
+    private NotificationManagerCompat notificationManager;
+    private Notification notification;
     private ConnectivityManager cm;
     private FirebaseDatabase database;
     private DatabaseReference mFirebaseReference;
@@ -171,31 +170,33 @@ public class MainActivity extends AppCompatActivity {
             }
         };
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e(TAG, "onActivityResult: requestCode="+requestCode+" ResultCode = "+resultCode);
-        if(requestCode != 1){
-        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
-        if(intentResult.getContents() != null){
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setTitle("Secret Code");
-            builder.setMessage(intentResult.getContents());
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    notificationManager.notify(1, notification);
-                }
-            });
-            builder.show();
+        Log.e(TAG, "onActivityResult: requestCode=" + requestCode + " ResultCode = " + resultCode);
+        if (requestCode != 1) {
+            IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            if (intentResult.getContents() != null) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Secret Code");
+                builder.setMessage(intentResult.getContents());
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        notificationManager.notify(1, notification);
+                    }
+                });
+                builder.show();
             /*mFirebaseReference = database.getReference(SCANNER_REF);
             mFirebaseReference.child(intentResult.getContents()).setValue(constituency);*/
-        }else{
-            Toast.makeText(this, "QR code unsuccessful", Toast.LENGTH_SHORT).show();
-        }
+            } else {
+                Toast.makeText(this, "QR code unsuccessful", Toast.LENGTH_SHORT).show();
+            }
         }
     }
+
     @Override
     protected void onResume() {
         super.onResume();

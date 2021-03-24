@@ -1,39 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="300dp"
     android:layout_height="250dp"
-    android:background="#fff2ff"
-    android:layout_gravity="center">
+    android:layout_gravity="center"
+    android:background="#fff2ff">
+
     <TextView
         android:id="@+id/text_field"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Enter the pincode:"
         android:layout_margin="20dp"
-        android:textSize="24sp"/>
+        android:text="Enter the pincode:"
+        android:textSize="24sp" />
+
     <EditText
         android:id="@+id/pincode_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:inputType="number"
-        android:padding="20dp"
+        android:layout_centerInParent="true"
         android:layout_margin="20dp"
+        android:background="@color/white"
         android:hint="Enter the postal code here"
-        android:layout_centerInParent="true"/>
+        android:inputType="number"
+        android:padding="20dp" />
+
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="gone"/>
+        android:visibility="gone" />
+
     <Button
         android:id="@+id/final_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="OK"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:text="OK" />
 
 </RelativeLayout>

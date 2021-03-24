@@ -7,6 +7,7 @@ import android.os.Build;
 
 public class Notifications extends Application {
     public static final String NOTIFY_CHANNEL = "Channel 1";
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -14,9 +15,9 @@ public class Notifications extends Application {
     }
 
     private void createNotificationChannel() {
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel1 = new NotificationChannel(NOTIFY_CHANNEL
-            ,"Coercion", NotificationManager.IMPORTANCE_HIGH);
+                    , "Coercion", NotificationManager.IMPORTANCE_HIGH);
             channel1.setDescription("Testing the voter for coercion");
 
             NotificationManager manager = getSystemService(NotificationManager.class);

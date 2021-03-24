@@ -38,7 +38,7 @@ public class LocationSetting {
     }
 
     String setLocation(Context context, ImageView toggleImage, TextView place,
-                     Dialog locationDialog, ConnectivityManager cm) {
+                       Dialog locationDialog, ConnectivityManager cm) {
         final String[] pincode = new String[1];
         Toast.makeText(context, "Setting Location", Toast.LENGTH_SHORT).show();
 

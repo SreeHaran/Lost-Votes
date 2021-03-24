@@ -15,6 +15,7 @@ import static com.sreeharan.myvote_mobileapp.VerifyActivity.IDCheck;
 import static com.sreeharan.myvote_mobileapp.VerifyActivity.faceCheck;
 import static com.sreeharan.myvote_mobileapp.VerifyActivity.faceErrorMessage;
 import static com.sreeharan.myvote_mobileapp.VerifyActivity.voterIDErrorMessage;
+
 public class ImageDetection {
 
     static boolean detectFaces(Context context, Bitmap picture, ImageView detection) {
@@ -39,12 +40,11 @@ public class ImageDetection {
             detection.setImageResource(R.drawable.wrong_symbol);
             faceErrorMessage.setText("No face has been detected in the picture");
             faceCheck = false;
-        }else if(faces.size() == 1){
+        } else if (faces.size() == 1) {
             detection.setImageResource(R.drawable.correct_symbol);
             faceErrorMessage.setText("Face Detection Successful");
             faceCheck = true;
-        }
-        else if(faces.size()>1){
+        } else if (faces.size() > 1) {
             detection.setImageResource(R.drawable.wrong_symbol);
             faceErrorMessage.setText("Multiple persons has been detected");
             faceCheck = false;
@@ -54,13 +54,13 @@ public class ImageDetection {
         return faceCheck;
     }
 
-    static boolean detectVoterID(Bitmap picture, ImageView detection){
+    static boolean detectVoterID(Bitmap picture, ImageView detection) {
         voterIDErrorMessage.setVisibility(View.VISIBLE);
-        if(picture != null){
+        if (picture != null) {
             detection.setImageResource(R.drawable.correct_symbol);
             voterIDErrorMessage.setText("Voter ID detection Successful");
             IDCheck = true;
-        }else{
+        } else {
             detection.setImageResource(R.drawable.wrong_symbol);
             voterIDErrorMessage.setText("Voter ID detection failed");
             IDCheck = false;
